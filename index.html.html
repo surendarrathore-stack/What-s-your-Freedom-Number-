@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>[hidden]{display:none!important}body{margin:0}img{max-width:100%}</style>
+</head>
+<body>
+<title>Freedom Number Planner</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Source+Sans+3:wght@400;600;700&display=swap">
+<style>
+/* Layout: one short mobile column: 3 inputs → one big result → goal chips → name + WhatsApp. Under a minute end to end. */
+:root{
+  --bg:#f3f5f7; --surface:#ffffff; --ink:#14212c; --muted:#5b6873; --line:#dde3e8;
+  --brand:#003053; --teal:#007b87; --gold:#ffd559; --tint:#E6F4FF; --pos:#008750;
+  --on-brand:#ffffff; --on-brand-soft:#cfe3f2; --chip-on:#003053; --chip-on-ink:#ffffff; --big:#003053;
+  --display:"Poppins",system-ui,sans-serif; --body:"Source Sans 3",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0b1620; --surface:#122230; --ink:#e7eef4; --muted:#9db0c0; --line:#24384a;
+  --brand:#0a3b63; --teal:#3fb6c1; --gold:#ffd559; --tint:#16324a; --pos:#4cc58a;
+  --on-brand:#ffffff; --on-brand-soft:#b9d2e6; --chip-on:#ffd559; --chip-on-ink:#14212c; --big:#ffd559; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0b1620; --surface:#122230; --ink:#e7eef4; --muted:#9db0c0; --line:#24384a;
+  --brand:#0a3b63; --teal:#3fb6c1; --gold:#ffd559; --tint:#16324a; --pos:#4cc58a;
+  --on-brand:#ffffff; --on-brand-soft:#b9d2e6; --chip-on:#ffd559; --chip-on-ink:#14212c; --big:#ffd559; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.45;padding:0 16px}
+.wrap{max-width:520px;margin:0 auto;padding-block:20px 40px;display:flex;flex-direction:column;gap:16px}
+h1,h2{font-family:var(--display);margin:0;text-wrap:balance}
+.hero{background:var(--brand);color:var(--on-brand);border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:8px}
+.eyebrow{font-family:var(--display);font-weight:600;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold)}
+.hero h1{color:var(--on-brand);font-size:clamp(26px,7.5vw,32px);line-height:1.1;font-weight:700}
+.hero h1 span{color:var(--gold)}
+.hero p{margin:0;color:var(--on-brand-soft);font-size:15px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:14px}
+.inputs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.inputs .full{grid-column:1/-1}
+label{display:flex;flex-direction:column;gap:5px;font-size:14px;font-weight:600;min-width:0}
+input{font:inherit;font-size:17px;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:11px 12px;width:100%;min-width:0}
+input:focus-visible,button:focus-visible,a:focus-visible{outline:3px solid var(--teal);outline-offset:2px}
+.money{position:relative}
+.money input{padding-left:28px}
+.money::before{content:"₹";position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-weight:600;pointer-events:none}
+.result{background:var(--tint);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:6px}
+.lbl{font-size:13px;color:var(--muted)}
+.big{font-family:var(--display);font-weight:700;font-size:clamp(34px,10vw,44px);line-height:1.05;color:var(--big);font-variant-numeric:tabular-nums}
+.sip{font-family:var(--display);font-weight:600;font-size:18px;color:var(--ink)}
+.sip b{color:var(--pos);font-variant-numeric:tabular-nums}
+.small{font-size:13px;color:var(--muted);margin:0}
+h2{font-size:17px;font-weight:600}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font:inherit;font-size:15px;font-weight:600;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:999px;padding:8px 14px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--chip-on);color:var(--chip-on-ink);border-color:var(--chip-on)}
+.send{background:var(--brand);color:var(--on-brand);border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:12px}
+.send h2{color:var(--on-brand);font-size:19px}
+.send p{margin:0;color:var(--on-brand-soft);font-size:15px}
+.send label{color:var(--on-brand)}
+.send input{background:#ffffff;color:#14212c;border-color:transparent}
+.opts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+@media (max-width:380px){.opts{grid-template-columns:minmax(0,1fr)}}
+.opt{display:flex;flex-direction:column;gap:4px;text-align:left;background:rgba(255,255,255,.08);color:var(--on-brand);border:1.5px solid rgba(255,255,255,.25);border-radius:12px;padding:12px;min-width:0}
+.opt b{font-family:var(--display);font-weight:600;font-size:15px;line-height:1.2}
+.opt span{font-size:13px;color:var(--on-brand-soft);font-weight:400;line-height:1.3}
+.opt[aria-checked="true"]{background:#ffffff;border-color:var(--gold)}
+.opt[aria-checked="true"] b{color:#003053}.opt[aria-checked="true"] span{color:#3d4852}
+.lab{font-size:14px;font-weight:600;color:var(--on-brand);margin-bottom:6px}
+.slots{display:flex;flex-wrap:wrap;gap:8px}
+.slot{font-size:14px;font-weight:600;border-radius:999px;padding:7px 13px;background:transparent;color:var(--on-brand);border:1.5px solid rgba(255,255,255,.35)}
+.slot[aria-checked="true"]{background:var(--gold);color:#14212c;border-color:var(--gold)}
+.when{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+@media (max-width:440px){.when{grid-template-columns:minmax(0,1fr)}}
+.when input{background:#ffffff;color:#14212c;border-color:transparent;color-scheme:light;min-height:46px}
+.dates{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;scrollbar-width:thin}
+.date{flex:none;display:flex;flex-direction:column;align-items:center;gap:1px;min-width:58px;border-radius:12px;padding:7px 8px;background:transparent;color:var(--on-brand);border:1.5px solid rgba(255,255,255,.35)}
+.date small{font-size:11px;font-weight:600;color:var(--on-brand-soft);text-transform:uppercase;letter-spacing:.06em}
+.date b{font-family:var(--display);font-size:18px;line-height:1.1}
+.date span{font-size:11px;color:var(--on-brand-soft)}
+.date[aria-checked="true"]{background:var(--gold);border-color:var(--gold);color:#14212c}
+.date[aria-checked="true"] small,.date[aria-checked="true"] span{color:#14212c}
+.done{margin:0;font-size:14px;color:var(--gold)}
+.done b{color:#ffffff}
+.wa{display:flex;justify-content:center;align-items:center;background:#25D366;color:#073b1e;border-radius:12px;padding:14px 16px;font-family:var(--display);font-weight:600;font-size:16px;text-decoration:none}
+.contact{font-size:13px;color:var(--on-brand-soft)}
+.contact b{color:var(--on-brand);user-select:all}
+.how{font-size:14px;margin-top:6px;border-top:1px solid var(--line);padding-top:10px}
+.how summary{cursor:pointer;color:var(--teal);font-weight:600}
+.how ol{margin:8px 0;padding-left:20px;display:flex;flex-direction:column;gap:6px;color:var(--ink)}
+.how ol b{font-variant-numeric:tabular-nums}
+.small b{color:var(--ink)}
+.disc{font-size:11.5px;color:var(--muted);line-height:1.5;margin:0}
+.disc b{color:var(--ink)}
+</style>
+
+<div class="wrap">
+  <header class="hero">
+    <div class="eyebrow">Mata Securities · Financial Wellness</div>
+    <h1>What's your <span>Freedom Number?</span></h1>
+    <p>The amount that makes work optional. Find yours in under a minute. Nothing you type is stored.</p>
+  </header>
+
+  <section class="card" aria-label="Your details">
+    <div class="inputs">
+      <label for="age">Your age<input id="age" type="number" inputmode="numeric" min="18" max="70" value="30"></label>
+      <label for="fage">Freedom at age<input id="fage" type="number" inputmode="numeric" min="30" max="75" value="55"></label>
+      <label class="full" for="exp">Monthly household expenses<span class="money"><input id="exp" type="number" inputmode="numeric" min="0" step="1000" value="50000"></span></label>
+    </div>
+    <div class="result" aria-live="polite">
+      <div class="lbl">Your Freedom Number</div>
+      <div class="big" id="fn">—</div>
+      <div class="sip">Monthly SIP needed: <b id="sip">—</b></div>
+      <p class="small" id="step"></p>
+      <details class="how">
+        <summary>How is this calculated?</summary>
+        <ol id="howList"></ol>
+        <p class="small">This is a simplified rule of thumb for awareness. It does not include your existing savings, PF, NPS, taxes or returns earned after retirement. Returns are assumed, not guaranteed.</p>
+      </details>
+    </div>
+    <p class="small">Example values shown. Change them to yours. <b>Illustration only, not a promise of returns.</b></p>
+  </section>
+
+  <section class="card" aria-labelledby="g">
+    <h2 id="g">What else are you planning for?</h2>
+    <div class="chips" id="chips">
+      <button class="chip" type="button" aria-pressed="false">Home</button>
+      <button class="chip" type="button" aria-pressed="false">Child education</button>
+      <button class="chip" type="button" aria-pressed="false">Car</button>
+      <button class="chip" type="button" aria-pressed="false">Wedding</button>
+      <button class="chip" type="button" aria-pressed="false">Travel</button>
+      <button class="chip" type="button" aria-pressed="false">Early retirement</button>
+    </div>
+  </section>
+
+  <section class="send" aria-labelledby="s">
+    <h2 id="s">Get your personal plan</h2>
+    <p>Free and confidential with Surendar Rathore, Mata Securities. No obligation.</p>
+    <div class="opts" role="radiogroup" aria-label="How would you like to connect?">
+      <button class="opt" type="button" role="radio" aria-checked="true" data-v="meet"><b>Book a financial discussion</b><span>30-min session with an expert, online or in person</span></button>
+      <button class="opt" type="button" role="radio" aria-checked="false" data-v="call"><b>Schedule a call</b><span>Quick 15-min call to answer your questions</span></button>
+    </div>
+    <div class="when">
+      <label for="pdate">Preferred date<input id="pdate" type="date"></label>
+      <label for="ptime">Preferred time<input id="ptime" type="time" step="900"></label>
+    </div>
+    <label for="nm">Your name<input id="nm" type="text" autocomplete="name" placeholder="Your name"></label>
+    <a class="wa" id="wa" href="#" target="_blank" rel="noopener">Book my discussion on WhatsApp</a>
+    <p class="done" id="done" hidden>WhatsApp should now be open with your request. Tap <b>Send</b> there, and Surendar will confirm your slot.</p>
+    <div class="contact">WhatsApp <b>+91 98191 00438</b> · <b>surendar.rathore@matasec.com</b></div>
+  </section>
+
+  <p class="disc"><b>Mutual Fund investments are subject to market risks, read all scheme related documents carefully.</b> For investor education only; not investment advice. Illustration assumes 6% inflation, 30 years of retirement expenses and a 12% p.a. return, which is not guaranteed. Mata Securities India Pvt. Ltd. · SEBI Registered Research Analyst INH000022668 · AMFI Registered MF Distributor ARN-0158.</p>
+</div>
+
+<script>
+(function(){
+  var WA_NUMBER="919819100438", INF=.06, RET=.12;
+  var $=function(id){return document.getElementById(id)};
+  var nf=new Intl.NumberFormat('en-IN',{maximumFractionDigits:0});
+  function rup(x){return '₹'+nf.format(Math.round(x))}
+  function short(x){if(x>=1e7)return '₹'+(x/1e7).toFixed(1).replace(/\.0$/,'')+' Cr';if(x>=1e5)return '₹'+(x/1e5).toFixed(1).replace(/\.0$/,'')+' L';return rup(x)}
+  function v(id,d){var n=parseFloat($(id).value);return isFinite(n)?n:d}
+  function factor(years){var i=RET/12,m=years*12;return ((Math.pow(1+i,m)-1)/i)*(1+i)}
+  function stepFactor(years){var i=RET/12,f=0;for(var y=0;y<years;y++){var a=Math.pow(1.1,y);for(var k=0;k<12;k++)f+=a*Math.pow(1+i,(years-y)*12-k)}return f}
+  function calc(){
+    var age=v('age',30),fage=v('fage',55),exp=v('exp',0),n=Math.round(fage-age);
+    var ok=n>0&&exp>0, FN=ok?exp*Math.pow(1+INF,n)*360:0, sip=ok?FN/factor(n):0, st=ok?FN/stepFactor(n):0;
+    $('fn').textContent=ok?short(FN):'—';
+    $('sip').textContent=ok?rup(sip):'—';
+    $('howList').innerHTML=ok?(
+      '<li><b>Years to go:</b> '+fage+' − '+age+' = <b>'+n+' years</b>.</li>'+
+      '<li><b>Future monthly cost:</b> prices rise about 6% a year, so '+rup(exp)+' today becomes <b>'+rup(exp*Math.pow(1+INF,n))+'</b> a month at age '+fage+' (× '+Math.pow(1+INF,n).toFixed(2)+').</li>'+
+      '<li><b>Freedom Number:</b> that monthly cost × 12 months × 30 years of retirement = <b>'+short(FN)+'</b>.</li>'+
+      '<li><b>Monthly SIP:</b> the amount that could grow to '+short(FN)+' in '+n+' years at an assumed 12% a year = <b>'+rup(sip)+'</b>. With a 10% yearly step-up you could start at '+rup(st)+'.</li>'
+    ):'';
+    $('step').textContent=ok?('Or start at '+rup(st)+' and raise it 10% every year.'):(n<=0?'Freedom age must be higher than your age.':'');
+    var goals=[].slice.call(document.querySelectorAll('.chip[aria-pressed="true"]')).map(function(b){return b.textContent});
+    var name=$('nm').value.trim();
+    var L=['Hello Surendar,',''];
+    if(ok){L.push('*Freedom Number:* '+short(FN)+' (age '+age+' → '+fage+')');L.push('*Indicative SIP:* '+rup(sip)+'/month');}
+    if(goals.length) L.push('*Goals:* '+goals.join(', '));
+    var mode=document.querySelector('.opt[aria-checked="true"]').dataset.v;
+    L.push('*Request:* '+(mode==='meet'?'Financial discussion with an expert':'Call back'));
+    var pd=$('pdate').value, pt=$('ptime').value, ds='', ts='';
+    if(pd){var p=pd.split('-'),dd=new Date(+p[0],+p[1]-1,+p[2]);ds=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][dd.getDay()]+', '+p[2]+'-'+['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][+p[1]-1]+'-'+p[0]}
+    if(pt){var h=+pt.split(':')[0],m=pt.split(':')[1];ts=((h%12)||12)+':'+m+(h<12?' am':' pm')}
+    if(ds||ts) L.push('*Preferred slot:* '+ds+(ds&&ts?' at ':'')+ts);
+    L.push('',mode==='meet'?'I would like to book a financial discussion to build a personalised plan.':'Please schedule a call at your convenience.','','Regards,'+(name?('\n'+name):''));
+    $('wa').textContent=mode==='meet'?'Book my discussion on WhatsApp':'Schedule my call on WhatsApp';
+    var msg=L.join('\n');
+    $('wa').href='https://wa.me/'+WA_NUMBER+'?text='+encodeURIComponent(msg);
+  }
+  ['age','fage','exp','nm'].forEach(function(id){$(id).addEventListener('input',calc)});
+  [].forEach.call(document.querySelectorAll('.chip'),function(b){b.addEventListener('click',function(){b.setAttribute('aria-pressed',b.getAttribute('aria-pressed')==='true'?'false':'true');calc()})});
+  function radio(sel){[].forEach.call(document.querySelectorAll(sel),function(b){b.addEventListener('click',function(){[].forEach.call(document.querySelectorAll(sel),function(x){x.setAttribute('aria-checked','false')});b.setAttribute('aria-checked','true');calc()})})}
+  (function(){var t=new Date();t.setDate(t.getDate()+1);$('pdate').min=t.getFullYear()+'-'+('0'+(t.getMonth()+1)).slice(-2)+'-'+('0'+t.getDate()).slice(-2)})();
+  ['pdate','ptime'].forEach(function(id){$(id).addEventListener('input',calc);$(id).addEventListener('change',calc)});
+  radio('.opt');
+  $('wa').addEventListener('click',function(){$('done').hidden=false});
+  calc();
+})();
+</script>
+
+</body>
+</html>
